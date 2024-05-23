@@ -3,7 +3,7 @@
 This script initializes a Flask application for an API
 """
 
-from flask import Flask
+from flask import Flask, jsonify
 from models import storage
 from api.v1.views import app_views
 
@@ -15,6 +15,15 @@ app.register_blueprint(app_views)
 @app.teardown_appcontext
 def teardown(exception):
     storage.close()
+
+
+@app.errorhandler(404)
+def no_page_exists(error):
+    """
+    Returns a 404 response
+    """
+    error_response = {"error": "Not found"}
+    return jsonify(error_response), 404
 
 
 if __name__ == "__main__":
