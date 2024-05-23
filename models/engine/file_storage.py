@@ -73,25 +73,23 @@ class FileStorage:
         """
         This method reteives one object
         """
-        if not id or not isinstance(id, str):
-            return None
-        if not cls or (cls not in self.classes.keys() and cls not in self.classes.values()):
-            return None
-
-        objects = self.all(cls)
-        for obj in objects:
-            if obj.id == id:
-                return obj
-        return None
+        if id and isinstance(id, str):
+            if cls and (cls in classes.keys() or cls in classes.values()):
+                all_objs = self.all(cls)
+                for key, value in all_objs.items():
+                    if id == value.id and key.split('.')[1] == id:
+                        return value
+        return
 
     def count(self, cls=None):
         """
         This method counts objects in storage
         """
         if cls:
-            return len(self.all(cls))
-        else:
-            total_count = 0
-            for objects in self.classes.values():
-                total_count += len(objects)
-            return total_count
+            if cls in classes.keys() or cls in classes.values():
+                count = len(self.all(cls))
+            else:
+                return count
+        if not cls:
+            count = len(self.all())
+        return count
