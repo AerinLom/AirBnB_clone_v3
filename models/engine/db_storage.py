@@ -79,7 +79,7 @@ class DBStorage:
         """
         This method reteives one object
         """
-        if id and isinstance(id,str):
+        if id and isinstance(id, str):
             if cls and (cls in classes.keys() or cls in classes.values()):
                 all_objs = self.all(cls)
                 for key, value in all_objs.items():
