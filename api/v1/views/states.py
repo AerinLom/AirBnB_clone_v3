@@ -13,8 +13,9 @@ def get_all_states():
     """
     Retrieves the list of all State objects.
     """
-    all_states = storage.all(State).values()
-    return jsonify([state.to_dict() for state in all_states])
+    all_states = storage.all('State')
+    all_states = list(obj.to_dict() for obj in all_states.values())
+    return jsonify(all_states)
 
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
@@ -50,12 +51,12 @@ def create_new_state():
     """
     Creates a State object.
     """
-    if not request.json:
+    data = request.get_json()
+    if data is None:
         abort(400, description="Not a JSON")
-    if 'name' not in request.json:
+    if data.get("name") is None:
         abort(400, description="Missing name")
 
-    data = request.get_json()
     created_state = State(**data)
     storage.new(created_state)
     storage.save()
