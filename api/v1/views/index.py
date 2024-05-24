@@ -21,16 +21,13 @@ def get_stats():
     """
     Retrieves the number of objects by type.
     """
-    if request.method == 'GET':
-        stats = {}
-        PLURALS = {
-            "Amenity": "amenities",
-            "City": "cities",
-            "Place": "places",
-            "Review": "reviews",
-            "State": "states",
-            "User": "users"
-        }
-        for key, value in PLURALS.items():
-            stats[value] = storage.count(key)
-        return jsonify(stats)
+    stats = {
+        "amenities": storage.count("Amenity"),
+        "cities": storage.count("City"),
+        "places": storage.count("Place"),
+        "reviews": storage.count("Review"),
+        "states": storage.count("State"),
+        "users": storage.count("User")
+    }
+    return jsonify(stats)
+
