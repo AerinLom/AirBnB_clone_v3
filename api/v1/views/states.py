@@ -13,8 +13,8 @@ def get_all_states():
     """
     Retrieves the list of all State objects.
     """
-    all_states = storage.all(State).values()
-    return jsonify([state.to_dict() for state in all_states])
+    all_state = storage.all(State).values()
+    return jsonify([state.to_dict() for state in all_state])
 
 
 @app_views.route('/states/<state_id>', methods=['GET'], strict_slashes=False)
