@@ -21,7 +21,7 @@ def get_places_by_city(city_id):
         return abort(404)
     all_places = storage.all('Place')
     city_places = [place_obj.to_dict() for place_obj in all_places.values()
-                   if obj.city_id == city_id]
+                   if place_obj.city_id == city_id]
     return jsonify(city_places)
 
 
@@ -74,6 +74,7 @@ def create_place(city_id):
 
     data['city_id'] = city_id
     place = Place(**data)
+    storage.new(place)
     storage.save()
     return jsonify(place.to_dict()), 201
 
