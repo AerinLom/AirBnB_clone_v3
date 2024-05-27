@@ -17,8 +17,8 @@ def get_places_by_city(city_id):
     Gets all place objects
     """
     city = storage.get(City, city_id)
-    if not city:
-        return abort(404)
+    if city is None:
+        abort(404)
     all_places = storage.all('Place')
     city_places = [place_obj.to_dict() for place_obj in all_places.values()
                    if place_obj.city_id == city_id]
@@ -31,8 +31,8 @@ def get_place(place_id):
     Returns a place object
     """
     place = storage.get(Place, place_id)
-    if not place:
-        return abort(404)
+    if place is None:
+        abort(404)
     return jsonify(place.to_dict())
 
 
@@ -43,9 +43,9 @@ def delete_place(place_id):
     Deletes a place object
     """
     place = storage.get(Place, place_id)
-    if not place:
-        return abort(404)
-    storage.delete(place)
+    if place is None:
+        abort(404)
+    place.delete()
     storage.save()
     return jsonify({}), 200
 
@@ -57,8 +57,8 @@ def create_place(city_id):
     Creates a place object
     """
     city = storage.get(City, city_id)
-    if not city:
-        return abort(404)
+    if city is None:
+        abort(404)
 
     try:
         data = request.get_json()
@@ -67,19 +67,16 @@ def create_place(city_id):
     except Exception:
         abort(400, description="Not a JSON")
     if 'user_id' not in data:
-        return abort(400, 'Missing user_id')
+        abort(400, 'Missing user_id')
 
     user = storage.get(User, data['user_id'])
-    if not user:
-        return abort(404)
-
+    if user is None:
+        abort(404)
     if 'name' not in data:
-        return abort(400, 'Missing name')
-
+        abort(400, 'Missing name'
     data['city_id'] = city_id
     place = Place(**data)
-    storage.new(place)
-    storage.save()
+    place.save()
     return jsonify(place.to_dict()), 201
 
 
@@ -89,8 +86,8 @@ def update_place(place_id):
     Updates a place object
     """
     place = storage.get(Place, place_id)
-    if not place:
-        return abort(404)
+    if place is None:
+        abort(404)
 
     try:
         data = request.get_json()
