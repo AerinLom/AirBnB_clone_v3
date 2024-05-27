@@ -72,8 +72,10 @@ def update_state(state_id):
         abort(404)
     if not request.json:
         abort(400, description="Not a JSON")
-
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except Exception as e:
+        abort(400, 'Not a JSON')
     ignore_keys = ['id', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore_keys:
