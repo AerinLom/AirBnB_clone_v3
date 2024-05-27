@@ -59,9 +59,13 @@ def create_review(place_id):
     if not place:
         return abort(404)
 
-    data = request.get_json()
-    if not data:
-        return abort(400, 'Not a JSON')
+    try:
+        data = request.get_json()
+        if data is None:
+            abort(400, description="Not a JSON")
+    except Exception:
+        abort(400, description="Not a JSON")
+
     if 'user_id' not in data:
         return abort(400, 'Missing user_id')
     if 'text' not in data:
@@ -86,9 +90,12 @@ def update_review(review_id):
     if not review:
         return abort(404)
 
-    data = request.get_json()
-    if not data:
-        return abort(400, 'Not a JSON')
+    try:
+        data = request.get_json()
+        if data is None:
+            abort(400, description="Not a JSON")
+    except Exception:
+        abort(400, description="Not a JSON")
 
     ignore_keys = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
     for key, value in data.items():
