@@ -50,10 +50,14 @@ def create_new_state():
     """
     Creates a State object.
     """
-    data = request.get_json()
-    if data is None:
+    try:
+        data = request.get_json()
+        if data is None:
+            abort(400, description="Not a JSON")
+    except Exception:
         abort(400, description="Not a JSON")
-    if data.get("name") is None:
+
+    if "name" not in data:
         abort(400, description="Missing name")
 
     created_state = State(**data)
@@ -68,14 +72,16 @@ def update_state(state_id):
     Updates a State object.
     """
     state_to_update = storage.get(State, state_id)
-    if not state:
+    if not state_to_update:
         abort(404)
-    if not request.json:
-        abort(400, description="Not a JSON")
+
     try:
         data = request.get_json()
-    except Exception as e:
-        abort(400, 'Not a JSON')
+        if data is None:
+            abort(400, description="Not a JSON")
+    except Exception:
+        abort(400, description="Not a JSON")
+
     ignore_keys = ['id', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore_keys:
