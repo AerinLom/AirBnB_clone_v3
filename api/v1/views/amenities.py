@@ -51,8 +51,11 @@ def create_new_amenity():
     """
     Creates an Amenity object.
     """
-    data = request.get_json()
-    if data is None:
+    try:
+        data = request.get_json()
+        if data is None:
+            abort(400, description="Not a JSON")
+    except Exception:
         abort(400, description="Not a JSON")
     if data.get("name") is None:
         abort(400, description="Missing name")
@@ -72,8 +75,12 @@ def amenity_update(amenity_id):
     amenity = storage.get(Amenity, amenity_id)
     if not amenity:
         abort(404)
-    if not request.json:
-        abort(400, 'Not a JSON')
+    try:
+        data = request.get_json()
+        if data is None:
+            abort(400, description="Not a JSON")
+    except Exception:
+        abort(400, description="Not a JSON")
     if amenity:
         data = request.get_json()
         ignore_keys = ['id', 'created_at', 'updated_at']

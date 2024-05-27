@@ -50,9 +50,12 @@ def create_user():
     """
     creates user object
     """
-    data = request.get_json()
-    if data is None:
-        return abort(400, 'Not a JSON')
+    try:
+        data = request.get_json()
+        if data is None:
+            abort(400, description="Not a JSON")
+    except Exception:
+        abort(400, description="Not a JSON")
     if 'email' not in data:
         return abort(400, 'Missing name')
     if 'password' not in data:
