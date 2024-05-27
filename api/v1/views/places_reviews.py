@@ -68,12 +68,13 @@ def create_review(place_id):
 
     if 'user_id' not in data:
         return abort(400, 'Missing user_id')
-    if 'text' not in data:
-        return abort(400, 'Missing text')
 
     user = storage.get(User, data['user_id'])
     if not user:
         return abort(404)
+
+    if 'text' not in data:
+        return abort(400, 'Missing text')
 
     data['place_id'] = place_id
     review = Review(**data)
